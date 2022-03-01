@@ -1,6 +1,8 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
 
+import { Typography } from '@mui/material'
+
 const Home: NextPage = () => {
   return (
     <div>
@@ -8,7 +10,9 @@ const Home: NextPage = () => {
         <title>Home</title>
       </Head>
 
-      <h1>Home</h1>
+      <Typography variant='h3' component='h3'>
+        Home
+      </Typography>
     </div>
   )
 }
