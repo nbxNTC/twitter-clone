@@ -5,11 +5,39 @@ import { createTheme, ThemeProvider } from '@mui/material/styles'
 export const CustomThemeProvider: React.FC = ({ children }) => {
   const theme = createTheme({
     palette: {
+      mode: 'dark',
       primary: { main: '#1d9bf0' },
       secondary: { main: '#ffffff' },
       background: { default: '#15202B' },
     },
     components: {
+      MuiList: {
+        styleOverrides: {
+          root: {
+            '&.MuiMenu-list': {
+              backgroundColor: '#172430',
+            },
+          },
+        },
+      },
+      MuiIconButton: {
+        styleOverrides: {
+          root: {
+            color: 'rgba(255,255,255,.4)',
+            '&:hover': {
+              backgroundColor: 'rgba(255,255,255,.1)',
+            },
+          },
+        },
+      },
+      MuiLink: {
+        styleOverrides: {
+          root: {
+            color: 'white',
+            cursor: 'pointer',
+          },
+        },
+      },
       MuiTypography: {
         styleOverrides: {
           root: {
