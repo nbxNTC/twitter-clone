@@ -1,6 +1,6 @@
-import { Log } from 'helpers/types'
+import { LogInterface } from 'helpers/types'
 
-export const printLog = async ({ type, componentName, functionName, message, stackTrace }: Log) => {
+export const printLog = async ({ type, componentName, functionName, message, stackTrace }: LogInterface) => {
   const currentDate = new Date().toISOString()
 
   const formattedStackTrace = stackTrace ? JSON.stringify(stackTrace) : 'Não informado'
