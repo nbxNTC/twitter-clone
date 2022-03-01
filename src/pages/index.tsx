@@ -1,19 +1,36 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
+import { usePosts } from 'hooks'
 
-import { Typography } from '@mui/material'
+import { SxProps, Container, Box } from '@mui/material'
+import { Header, Sidebar, PostList } from 'components'
 
 const Home: NextPage = () => {
+  const { posts } = usePosts()
+
+  const styles = {
+    container: {
+      display: 'flex',
+      justifyContent: 'center',
+    } as SxProps,
+    content: {
+      width: '36rem',
+    } as SxProps,
+  }
+
   return (
-    <div>
+    <Container sx={styles.container}>
       <Head>
-        <title>Home</title>
+        <title>Home / Posterr</title>
       </Head>
 
-      <Typography variant='h3' component='h3'>
-        Home
-      </Typography>
-    </div>
+      <Sidebar />
+
+      <Box sx={styles.content}>
+        <Header title='Home' hasFeed />
+        <PostList data={posts} />
+      </Box>
+    </Container>
   )
 }
 
