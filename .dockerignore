@@ -1,0 +1,8 @@
+# ignore github folder
+.github
+
+# ignore all packages
+node_modules
+
+# ignore all md files
+*.md
