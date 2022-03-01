@@ -1,12 +1,14 @@
 import router from 'next/router'
 
-import { Container, Button, SxProps } from '@mui/material'
+import { Box, Button, SxProps } from '@mui/material'
 import { Home, PersonOutline } from '@mui/icons-material'
 
 export const Sidebar = () => {
   const styles = {
-    container: {
-      width: '18rem',
+    box: {
+      width: '20rem',
+      padding: '0 2rem',
+
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'flex-start',
@@ -29,7 +31,7 @@ export const Sidebar = () => {
   ]
 
   return (
-    <Container sx={styles.container}>
+    <Box sx={styles.box}>
       <Button sx={styles.logo} size='large' onClick={() => router.push('/')}>
         Posterr
       </Button>
@@ -43,6 +45,6 @@ export const Sidebar = () => {
       <Button sx={styles.action} fullWidth size='large' variant='contained'>
         Post
       </Button>
-    </Container>
+    </Box>
   )
 }
