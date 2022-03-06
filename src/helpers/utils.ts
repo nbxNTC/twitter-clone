@@ -1,4 +1,4 @@
-import { LogInterface } from 'helpers/types'
+import { LogInterface, SessionInterface } from 'helpers/types'
 
 export const printLog = async ({ type, componentName, functionName, message, stackTrace }: LogInterface) => {
   const currentDate = new Date().toISOString()
@@ -8,4 +8,10 @@ export const printLog = async ({ type, componentName, functionName, message, sta
   const content = `[strider-front-assessment] [Tipo: ${type}] [Componente: ${componentName}] [Função: ${functionName}] [Data: ${currentDate}] [Mensagem: ${message}] [Erro: ${formattedStackTrace}]`
 
   return console[type](content)
+}
+
+export const getSession = () => {
+  const localSession = localStorage.getItem('session')
+  if (!localSession) return
+  return JSON.parse(localSession) as SessionInterface
 }

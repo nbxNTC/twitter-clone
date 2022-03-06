@@ -18,7 +18,7 @@ export interface UserInterface {
   nickname: string
 }
 
-export type PostType = 'POST' | 'REPOST'
+export type PostType = 'POST' | 'REPOST' | 'QUOTE'
 
 export interface PostInterface {
   user: UserInterface
@@ -32,4 +32,8 @@ export interface MenuItemInterface {
   icon?: React.ReactNode
   name: string
   onSubmit: () => void
+}
+
+export interface SessionInterface {
+  user: UserInterface
 }
