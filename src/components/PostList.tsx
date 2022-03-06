@@ -22,7 +22,11 @@ export const PostList = (props: Props) => {
       {data
         .sort((a, b) => String(b.createdAt).localeCompare(String(a.createdAt)))
         .map((item, index) => (
-          <Post data={item} key={new Date().toString() + index} />
+          <Post
+            data={item.type === 'REPOST' && item.post ? item.post : item}
+            userThatReposted={item.type === 'REPOST' ? item.user.name : undefined}
+            key={new Date().toString() + index}
+          />
         ))}
     </Box>
   )

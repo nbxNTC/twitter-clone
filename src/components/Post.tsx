@@ -1,21 +1,23 @@
 import router from 'next/router'
-import { useState } from 'react'
+import { useState, useContext } from 'react'
 import { format } from 'date-fns'
 import { PostInterface, MenuItemInterface } from 'helpers/types'
 import { createRepost } from 'services/posts'
+import { PostsContext } from 'contexts'
 
 import { Avatar, Box, Typography, Link, IconButton, Tooltip } from '@mui/material'
 import { CompareArrows, Create } from '@mui/icons-material'
-import { MenuList } from 'components'
+import { MenuList, PostQuote } from 'components'
 
 interface Props {
   data: PostInterface
+  userThatReposted?: string
 }
 
 export const Post = (props: Props) => {
-  const { data } = props
+  const { data, userThatReposted } = props
 
-  const post = !data.post || (data.post && data.message) ? data : data.post
+  const { fetchPosts } = useContext(PostsContext)
 
   const [anchorRepost, setAnchorRepost] = useState<HTMLElement | null>(null)
 
@@ -26,6 +28,7 @@ export const Post = (props: Props) => {
       onSubmit: () => {
         createRepost(data)
         setAnchorRepost(null)
+        fetchPosts()
       },
     },
     { icon: <Create />, name: 'Quote Post', onSubmit: () => {} },
@@ -35,10 +38,9 @@ export const Post = (props: Props) => {
     root: {
       height: 'fit-content',
       padding: '1rem',
-      margin: data.type === 'POST' ? '0' : '1rem 0 .5rem',
 
       border: '1px solid rgb(255,255,255,.1)',
-      borderRadius: data.type === 'POST' ? 0 : 6,
+      borderRadius: 0,
 
       display: 'flex',
       flexDirection: 'column',
@@ -55,8 +57,8 @@ export const Post = (props: Props) => {
       display: 'flex',
     },
     avatar: {
-      width: data.type === 'POST' ? '3.5rem' : '1.5rem',
-      height: data.type === 'POST' ? '3.5rem' : '1.5rem',
+      width: '3.5rem',
+      height: '3.5rem',
       marginRight: '1rem',
       cursor: 'pointer',
     },
@@ -88,49 +90,37 @@ export const Post = (props: Props) => {
 
   return (
     <Box sx={styles.root}>
-      {data.type === 'POST' && data.post && !data.message && <Typography sx={styles.repostUser}>{data.user.name} reposted</Typography>}
+      {userThatReposted && <Typography sx={styles.repostUser}>{userThatReposted} reposted</Typography>}
 
       <Box sx={styles.content}>
-        {data.type === 'POST' && (
-          <Avatar
-            sx={styles.avatar}
-            alt={`Avatar of ${post.user.nickname}`}
-            src={post.user.photoUrl}
-            onClick={() => router.push(`/profile/${post.user.nickname}`)}
-          />
-        )}
+        <Avatar
+          sx={styles.avatar}
+          alt={`Avatar of ${data.user.nickname}`}
+          src={data.user.photoUrl}
+          onClick={() => router.push(`/profile/${data.user.nickname}`)}
+        />
 
         <Box>
           <Box sx={styles.header}>
-            {data.type === 'REPOST' && (
-              <Avatar
-                sx={styles.avatar}
-                alt={`Avatar of ${post.user.nickname}`}
-                src={post.user.photoUrl}
-                onClick={() => router.push(`/profile/${post.user.nickname}`)}
-              />
-            )}
-            <Link sx={styles.userName} underline='hover' onClick={() => router.push(`/profile/${post.user.nickname}`)}>
-              {post.user.name}
+            <Link sx={styles.userName} underline='hover' onClick={() => router.push(`/profile/${data.user.nickname}`)}>
+              {data.user.name}
             </Link>
-            <Typography sx={styles.userInfo}>@{post.user.nickname}</Typography>
-            <Typography sx={styles.userInfo}>{format(new Date(post.createdAt), 'MMMM dd, yy')}</Typography>
+            <Typography sx={styles.userInfo}>@{data.user.nickname}</Typography>
+            <Typography sx={styles.userInfo}>{format(new Date(data.createdAt), 'MMMM dd, yy')}</Typography>
           </Box>
 
-          {post.message && <Typography>{post.message}</Typography>}
-          {post.post && <Post data={post.post} />}
+          {data.message && <Typography>{data.message}</Typography>}
+          {data.post && <PostQuote data={data.post} />}
 
-          {post.type === 'POST' && (
-            <Box sx={styles.actions}>
-              <Tooltip title='Repost'>
-                <IconButton id='repost-button' onClick={(e) => setAnchorRepost(e.currentTarget)}>
-                  <CompareArrows />
-                </IconButton>
-              </Tooltip>
+          <Box sx={styles.actions}>
+            <Tooltip title='Repost'>
+              <IconButton id='repost-button' onClick={(e) => setAnchorRepost(e.currentTarget)}>
+                <CompareArrows />
+              </IconButton>
+            </Tooltip>
 
-              <MenuList ariaLabel='repost-button' anchor={anchorRepost} setAnchor={setAnchorRepost} data={repostMenuList} />
-            </Box>
-          )}
+            <MenuList ariaLabel='repost-button' anchor={anchorRepost} setAnchor={setAnchorRepost} data={repostMenuList} />
+          </Box>
         </Box>
       </Box>
     </Box>
