@@ -1,10 +1,11 @@
 import React, { useState, useContext } from 'react'
 import { createPost } from 'services/posts'
+import { PostInterface } from 'helpers/types'
 import { PostsContext } from 'contexts'
 
 const LIMIT_CHAR = 777
 
-export const useCreatePost = (handleClose?: () => void) => {
+export const useCreatePost = (handleClose?: () => void, post?: PostInterface) => {
   const { fetchPosts } = useContext(PostsContext)
 
   const [message, setMessage] = useState<string>('')
@@ -17,7 +18,7 @@ export const useCreatePost = (handleClose?: () => void) => {
   }
 
   const handleSubmit = () => {
-    createPost(message)
+    createPost(message, post)
     fetchPosts()
     setMessage('')
 

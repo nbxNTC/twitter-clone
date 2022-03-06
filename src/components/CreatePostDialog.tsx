@@ -1,17 +1,20 @@
 import React, { useContext } from 'react'
+import { PostInterface } from 'helpers/types'
 import { SessionContext } from 'contexts'
 import { useCreatePost } from 'hooks'
 
 import { Dialog, DialogTitle, DialogContent, Avatar, Divider, Button, InputBase, IconButton, Box, Typography } from '@mui/material'
 import { Close } from '@mui/icons-material'
+import { QuotedPost } from 'components'
 
 interface Props {
   open: boolean
   setOpen: React.Dispatch<React.SetStateAction<boolean>>
+  post?: PostInterface
 }
 
 export const CreatePostDialog = (props: Props) => {
-  const { open, setOpen } = props
+  const { open, setOpen, post } = props
 
   const { session } = useContext(SessionContext)
 
@@ -19,11 +22,11 @@ export const CreatePostDialog = (props: Props) => {
     setOpen(false)
   }
 
-  const { message, handleChange, handleSubmit, leftCharacters } = useCreatePost(handleClose)
+  const { message, handleChange, handleSubmit, leftCharacters } = useCreatePost(handleClose, post)
 
   const styles: MuiStyles = {
     content: {
-      width: '30rem',
+      width: '36rem',
       padding: '0 2rem 1.5rem',
       display: 'flex',
     },
@@ -66,6 +69,8 @@ export const CreatePostDialog = (props: Props) => {
             onChange={handleChange}
             autoFocus
           />
+
+          {post && <QuotedPost data={post} />}
 
           <Divider />
 

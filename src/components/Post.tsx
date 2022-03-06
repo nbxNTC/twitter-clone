@@ -7,7 +7,7 @@ import { PostsContext } from 'contexts'
 
 import { Avatar, Box, Typography, Link, IconButton, Tooltip } from '@mui/material'
 import { CompareArrows, Create } from '@mui/icons-material'
-import { MenuList, PostQuote } from 'components'
+import { MenuList, QuotedPost, CreatePostDialog } from 'components'
 
 interface Props {
   data: PostInterface
@@ -20,6 +20,7 @@ export const Post = (props: Props) => {
   const { fetchPosts } = useContext(PostsContext)
 
   const [anchorRepost, setAnchorRepost] = useState<HTMLElement | null>(null)
+  const [openCreatePost, setOpenCreatePost] = useState<boolean>(false)
 
   const repostMenuList: MenuItemInterface[] = [
     {
@@ -31,7 +32,14 @@ export const Post = (props: Props) => {
         fetchPosts()
       },
     },
-    { icon: <Create />, name: 'Quote Post', onSubmit: () => {} },
+    {
+      icon: <Create />,
+      name: 'Quote Post',
+      onSubmit: () => {
+        setOpenCreatePost(true)
+        setAnchorRepost(null)
+      },
+    },
   ]
 
   const styles: MuiStyles = {
@@ -110,7 +118,7 @@ export const Post = (props: Props) => {
           </Box>
 
           {data.message && <Typography>{data.message}</Typography>}
-          {data.post && <PostQuote data={data.post} />}
+          {data.post && <QuotedPost data={data.post} />}
 
           <Box sx={styles.actions}>
             <Tooltip title='Repost'>
@@ -120,6 +128,7 @@ export const Post = (props: Props) => {
             </Tooltip>
 
             <MenuList ariaLabel='repost-button' anchor={anchorRepost} setAnchor={setAnchorRepost} data={repostMenuList} />
+            <CreatePostDialog open={openCreatePost} setOpen={setOpenCreatePost} post={data} />
           </Box>
         </Box>
       </Box>

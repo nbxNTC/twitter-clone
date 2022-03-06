@@ -8,7 +8,7 @@ interface Props {
   data: PostInterface
 }
 
-export const PostQuote = (props: Props) => {
+export const QuotedPost = (props: Props) => {
   const { data } = props
 
   const styles: MuiStyles = {

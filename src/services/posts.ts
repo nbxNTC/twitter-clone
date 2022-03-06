@@ -20,7 +20,7 @@ export const getPosts = () => {
   }
 }
 
-export const createPost = (message: string) => {
+export const createPost = (message: string, post?: PostInterface) => {
   try {
     const session = getSession()
 
@@ -35,7 +35,8 @@ export const createPost = (message: string) => {
     const newPost: PostInterface = {
       message,
       user: session.user,
-      type: 'POST',
+      type: post ? 'QUOTE' : 'POST',
+      post,
       createdAt: new Date(),
     }
 
