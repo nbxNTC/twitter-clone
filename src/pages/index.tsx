@@ -1,36 +1,39 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import { usePosts } from 'hooks'
+import { PostsContext } from 'contexts'
 
-import { SxProps, Container, Box } from '@mui/material'
+import { Container, Box } from '@mui/material'
 import { Header, Sidebar, PostList } from 'components'
 
 const Home: NextPage = () => {
-  const { posts } = usePosts()
+  const { posts, fetchPosts } = usePosts()
 
-  const styles = {
+  const styles: MuiStyles = {
     container: {
       display: 'flex',
       justifyContent: 'center',
-    } as SxProps,
+    },
     content: {
       width: '36rem',
-    } as SxProps,
+    },
   }
 
   return (
-    <Container sx={styles.container}>
-      <Head>
-        <title>Home / Posterr</title>
-      </Head>
+    <PostsContext.Provider value={{ fetchPosts }}>
+      <Container sx={styles.container}>
+        <Head>
+          <title>Home / Posterr</title>
+        </Head>
 
-      <Sidebar />
+        <Sidebar />
 
-      <Box sx={styles.content}>
-        <Header title='Home' hasFeed />
-        <PostList data={posts} />
-      </Box>
-    </Container>
+        <Box sx={styles.content}>
+          <Header title='Home' hasFeed />
+          <PostList data={posts} />
+        </Box>
+      </Container>
+    </PostsContext.Provider>
   )
 }
 

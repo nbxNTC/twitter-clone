@@ -2,8 +2,9 @@ import router from 'next/router'
 import { useState } from 'react'
 import { format } from 'date-fns'
 import { PostInterface, MenuItemInterface } from 'helpers/types'
+import { createRepost } from 'services/posts'
 
-import { Avatar, Box, SxProps, Typography, Link, IconButton, Tooltip } from '@mui/material'
+import { Avatar, Box, Typography, Link, IconButton, Tooltip } from '@mui/material'
 import { CompareArrows, Create } from '@mui/icons-material'
 import { MenuList } from 'components'
 
@@ -19,11 +20,18 @@ export const Post = (props: Props) => {
   const [anchorRepost, setAnchorRepost] = useState<HTMLElement | null>(null)
 
   const repostMenuList: MenuItemInterface[] = [
-    { icon: <CompareArrows />, name: 'Repost', onSubmit: () => {} },
+    {
+      icon: <CompareArrows />,
+      name: 'Repost',
+      onSubmit: () => {
+        createRepost(data)
+        setAnchorRepost(null)
+      },
+    },
     { icon: <Create />, name: 'Quote Post', onSubmit: () => {} },
   ]
 
-  const styles = {
+  const styles: MuiStyles = {
     root: {
       height: 'fit-content',
       padding: '1rem',
@@ -38,23 +46,23 @@ export const Post = (props: Props) => {
       '&:hover': {
         backgroundColor: 'rgb(255,255,255,.1)',
       },
-    } as SxProps,
+    },
     repostUser: {
       color: 'rgb(136, 153, 166)',
       marginBottom: '1rem',
-    } as SxProps,
+    },
     content: {
       display: 'flex',
-    } as SxProps,
+    },
     avatar: {
       width: data.type === 'POST' ? '3.5rem' : '1.5rem',
       height: data.type === 'POST' ? '3.5rem' : '1.5rem',
       marginRight: '1rem',
       cursor: 'pointer',
-    } as SxProps,
+    },
     userName: {
       fontWeight: '500',
-    } as SxProps,
+    },
     header: {
       marginBottom: '.2rem',
 
@@ -64,10 +72,10 @@ export const Post = (props: Props) => {
       '& > *:not(:last-child)': {
         marginRight: '.5rem',
       },
-    } as SxProps,
+    },
     userInfo: {
       color: 'rgb(136, 153, 166)',
-    } as SxProps,
+    },
     actions: {
       display: 'flex',
       alignItems: 'center',
@@ -75,7 +83,7 @@ export const Post = (props: Props) => {
       '& > *:not(:last-child)': {
         marginRight: '.5rem',
       },
-    } as SxProps,
+    },
   }
 
   return (
@@ -86,7 +94,7 @@ export const Post = (props: Props) => {
         {data.type === 'POST' && (
           <Avatar
             sx={styles.avatar}
-            alt={`Avatar de ${post.user.nickname}`}
+            alt={`Avatar of ${post.user.nickname}`}
             src={post.user.photoUrl}
             onClick={() => router.push(`/profile/${post.user.nickname}`)}
           />
@@ -97,7 +105,7 @@ export const Post = (props: Props) => {
             {data.type === 'REPOST' && (
               <Avatar
                 sx={styles.avatar}
-                alt={`Avatar de ${post.user.nickname}`}
+                alt={`Avatar of ${post.user.nickname}`}
                 src={post.user.photoUrl}
                 onClick={() => router.push(`/profile/${post.user.nickname}`)}
               />
@@ -106,7 +114,7 @@ export const Post = (props: Props) => {
               {post.user.name}
             </Link>
             <Typography sx={styles.userInfo}>@{post.user.nickname}</Typography>
-            {post.createdAt && <Typography sx={styles.userInfo}>{format(post.createdAt, 'MMMM dd, yy')}</Typography>}
+            <Typography sx={styles.userInfo}>{format(new Date(post.createdAt), 'MMMM dd, yy')}</Typography>
           </Box>
 
           {post.message && <Typography>{post.message}</Typography>}

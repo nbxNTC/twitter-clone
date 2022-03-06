@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { MenuItemInterface } from 'helpers/types'
 import { MenuList } from 'components'
 
-import { Box, SxProps, Typography, IconButton, Tooltip } from '@mui/material'
+import { Box, Typography, IconButton, Tooltip } from '@mui/material'
 import { Feed } from '@mui/icons-material'
 
 interface Props {
@@ -20,7 +20,7 @@ export const Header = (props: Props) => {
     { name: 'Following posts', onSubmit: () => {} },
   ]
 
-  const styles = {
+  const styles: MuiStyles = {
     root: {
       padding: '1rem',
 
@@ -29,7 +29,7 @@ export const Header = (props: Props) => {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'space-between',
-    } as SxProps,
+    },
   }
 
   return (

@@ -1,10 +1,19 @@
 import router from 'next/router'
+import { useState } from 'react'
 
-import { Box, Button, SxProps } from '@mui/material'
+import { Box, Button } from '@mui/material'
 import { Home, PersonOutline } from '@mui/icons-material'
+import { CreatePostDialog } from 'components'
 
 export const Sidebar = () => {
-  const styles = {
+  const [openCreatePost, setOpenCreatePost] = useState<boolean>(false)
+
+  const menuItems = [
+    { name: 'Home', url: '/', icon: <Home /> },
+    { name: 'Profile', url: '/profile', icon: <PersonOutline /> },
+  ]
+
+  const styles: MuiStyles = {
     box: {
       width: '20rem',
       padding: '0 2rem',
@@ -16,19 +25,14 @@ export const Sidebar = () => {
       '& > *': {
         marginBottom: '.5rem',
       },
-    } as SxProps,
+    },
     logo: {
       marginBottom: '1rem',
-    } as SxProps,
+    },
     action: {
       marginTop: '1rem',
-    } as SxProps,
+    },
   }
-
-  const menuItems = [
-    { name: 'Home', url: '/', icon: <Home /> },
-    { name: 'Profile', url: '/profile', icon: <PersonOutline /> },
-  ]
 
   return (
     <Box sx={styles.box}>
@@ -42,9 +46,11 @@ export const Sidebar = () => {
         </Button>
       ))}
 
-      <Button sx={styles.action} fullWidth size='large' variant='contained'>
+      <Button sx={styles.action} fullWidth size='large' variant='contained' onClick={() => setOpenCreatePost(true)}>
         Post
       </Button>
+
+      <CreatePostDialog open={openCreatePost} setOpen={setOpenCreatePost} />
     </Box>
   )
 }

@@ -1,3 +1,4 @@
+export { CreatePostDialog } from './CreatePostDialog'
 export { Header } from './Header'
 export { MenuList } from './MenuList'
 export { Post } from './Post'
