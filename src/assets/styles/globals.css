@@ -13,3 +13,20 @@ a {
 * {
   box-sizing: border-box;
 }
+
+/* width */
+::-webkit-scrollbar {
+  width: 6px;
+  background-color: #15202b;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: rgb(88, 88, 88);
+  border-radius: 100rem;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(65, 65, 65);
+}
