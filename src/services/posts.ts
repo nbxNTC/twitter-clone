@@ -1,14 +1,18 @@
-import { LogTypeEnum, PostInterface } from 'helpers/types'
+import { LogTypeEnum, PostInterface, FeedTypeEnum, FollowsType } from 'helpers/types'
 import { printLog, getSession } from 'helpers/utils'
-import { postsMock } from 'helpers/mocks'
+import { postsMock, followsMock } from 'helpers/mocks'
 
-export const getPosts = () => {
+export const getPosts = (feedType?: FeedTypeEnum) => {
   try {
     const localPosts = localStorage.getItem('posts')
-    if (localPosts) return JSON.parse(localPosts) as PostInterface[]
+    if (!localPosts) localStorage.setItem('posts', JSON.stringify(postsMock))
+    const posts = (localPosts ? JSON.parse(localPosts) : postsMock) as PostInterface[]
 
-    localStorage.setItem('posts', JSON.stringify(postsMock))
-    return postsMock as PostInterface[]
+    const localFollows = localStorage.getItem('follows')
+    if (!localFollows) localStorage.setItem('follows', JSON.stringify(followsMock))
+    const follows = (localFollows ? JSON.parse(localFollows) : followsMock) as FollowsType
+
+    return feedType === FeedTypeEnum.FOLLOWING ? posts.filter((item) => follows.includes(item.user.nickname)) : posts
   } catch (error) {
     printLog({
       type: LogTypeEnum.error,

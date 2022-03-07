@@ -1,13 +1,20 @@
-import type { NextPage } from 'next'
+import type { GetServerSideProps } from 'next'
 import Head from 'next/head'
 import { usePosts } from 'hooks'
 import { PostsContext } from 'contexts'
+import { FeedTypeEnum } from 'helpers/types'
 
 import { Box } from '@mui/material'
 import { Header, Sidebar, PostList } from 'components'
 
-const Home: NextPage = () => {
-  const { posts, fetchPosts } = usePosts()
+interface Props {
+  feedType?: FeedTypeEnum
+}
+
+const Home = (props: Props) => {
+  const { feedType } = props
+
+  const { posts, fetchPosts } = usePosts(feedType)
 
   const styles: MuiStyles = {
     root: {
@@ -44,3 +51,9 @@ const Home: NextPage = () => {
 }
 
 export default Home
+
+export const getServerSideProps: GetServerSideProps = async ({ query }) => {
+  const props = {}
+  if (query.feedType) Object.assign(props, { feedType: query.feedType })
+  return { props }
+}

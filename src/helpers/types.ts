@@ -37,3 +37,10 @@ export interface MenuItemInterface {
 export interface SessionInterface {
   user: UserInterface
 }
+
+export enum FeedTypeEnum {
+  'ALL' = 'ALL',
+  'FOLLOWING' = 'FOLLOWING',
+}
+
+export type FollowsType = string[]

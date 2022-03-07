@@ -1,6 +1,8 @@
-import { useState } from 'react'
-import { MenuItemInterface } from 'helpers/types'
+import router from 'next/router'
+import { useState, useContext } from 'react'
+import { MenuItemInterface, FeedTypeEnum } from 'helpers/types'
 import { MenuList } from 'components'
+import { PostsContext } from 'contexts'
 
 import { Box, Typography, IconButton, Tooltip } from '@mui/material'
 import { Feed } from '@mui/icons-material'
@@ -13,11 +15,27 @@ interface Props {
 export const Header = (props: Props) => {
   const { title, hasFeed } = props
 
+  const { fetchPosts } = useContext(PostsContext)
+
   const [anchorFeed, setAnchorFeed] = useState<HTMLElement | null>(null)
 
   const feedMenuList: MenuItemInterface[] = [
-    { name: 'All posts', onSubmit: () => {} },
-    { name: 'Following posts', onSubmit: () => {} },
+    {
+      name: 'All posts',
+      onSubmit: () => {
+        setAnchorFeed(null)
+        router.push('/')
+        fetchPosts()
+      },
+    },
+    {
+      name: 'Following posts',
+      onSubmit: () => {
+        setAnchorFeed(null)
+        router.push('/', { query: { feedType: FeedTypeEnum.FOLLOWING } })
+        fetchPosts(FeedTypeEnum.FOLLOWING)
+      },
+    },
   ]
 
   const styles: MuiStyles = {
