@@ -7,7 +7,7 @@ export const useProfile = () => {
   const router = useRouter()
   const { profile: userId } = router.query
 
-  const [profile, setProfile] = useState<ProfileInterface>()
+  const [profile, setProfile] = useState<ProfileInterface | undefined>()
 
   const fetchProfile = useCallback((userId: string) => {
     const newProfile = getProfile(userId)
@@ -18,5 +18,5 @@ export const useProfile = () => {
     if (userId) fetchProfile(String(userId))
   }, [userId, fetchProfile])
 
-  return { userId, profile }
+  return { userId, profile, setProfile }
 }

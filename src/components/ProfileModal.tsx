@@ -1,22 +1,34 @@
 import { useRouter } from 'next/router'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { format } from 'date-fns'
 import { useProfile } from 'hooks'
+import { SessionContext } from 'contexts'
+import { createFriendship, deleteFriendship } from 'services/friendships'
 
-import { Dialog, DialogTitle, DialogContent, Avatar, Typography, IconButton, Box } from '@mui/material'
+import { Dialog, DialogTitle, DialogContent, Avatar, Typography, IconButton, Box, Button } from '@mui/material'
 import { PostList } from 'components'
-import { ChevronLeft } from '@mui/icons-material'
+import { Close } from '@mui/icons-material'
 
 export const ProfileModal = () => {
   const router = useRouter()
 
-  const { userId, profile } = useProfile()
+  const { session } = useContext(SessionContext)
+
+  const { userId, profile, setProfile } = useProfile()
 
   const [open, setOpen] = useState<boolean>(false)
 
+  const handleFollow = () => {
+    if (profile && createFriendship(String(userId))) setProfile({ ...profile, wasFollowed: true })
+  }
+
+  const handleUnfollow = () => {
+    if (profile && deleteFriendship(String(userId))) setProfile({ ...profile, wasFollowed: false })
+  }
+
   const handleClose = () => {
     setOpen(false)
-    router.back()
+    router.replace('/', undefined, { scroll: false })
   }
 
   useEffect(() => {
@@ -28,6 +40,11 @@ export const ProfileModal = () => {
       width: '6rem',
       height: '6rem',
       marginBottom: '1rem',
+    },
+    userBox: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between',
     },
     userName: {
       fontWeight: '500',
@@ -64,15 +81,27 @@ export const ProfileModal = () => {
     <Dialog open={open} onClose={handleClose}>
       <DialogTitle>
         <IconButton onClick={handleClose}>
-          <ChevronLeft />
+          <Close />
         </IconButton>
       </DialogTitle>
       <DialogContent>
         <Avatar sx={styles.avatar} alt={`Avatar`} src={profile.user.photoUrl} />
-        <Typography sx={styles.userName} variant='h5' component='h5'>
-          {profile.user.name}
-        </Typography>
-        <Typography sx={styles.userInfo}>@{profile.user.nickname}</Typography>
+
+        <Box sx={styles.userBox}>
+          <Box>
+            <Typography sx={styles.userName} variant='h5' component='h5'>
+              {profile.user.name}
+            </Typography>
+            <Typography sx={styles.userInfo}>@{profile.user.nickname}</Typography>
+          </Box>
+
+          {session?.user.id !== profile.user.id && (
+            <Button variant={profile.wasFollowed ? 'outlined' : 'contained'} onClick={profile.wasFollowed ? handleUnfollow : handleFollow}>
+              {profile.wasFollowed ? 'Unfollow' : 'Follow'}
+            </Button>
+          )}
+        </Box>
+
         <Typography sx={styles.joinedAt}>Joined {format(new Date(String(profile.user.createdAt)), 'MMMM dd, yy')}</Typography>
 
         <Box sx={styles.metricsBox}>

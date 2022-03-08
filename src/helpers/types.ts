@@ -55,4 +55,5 @@ export interface ProfileInterface {
   posts: PostInterface[]
   follows: number
   following: number
+  wasFollowed: boolean
 }

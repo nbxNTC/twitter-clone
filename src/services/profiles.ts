@@ -1,8 +1,11 @@
 import { LogTypeEnum, UserInterface, PostInterface, FollowingUsersInterface, ProfileInterface } from 'helpers/types'
-import { printLog } from 'helpers/utils'
+import { printLog, getSession } from 'helpers/utils'
 
 export const getProfile = (userId: string) => {
   try {
+    const localSession = getSession()
+    if (!localSession) return
+
     const localUsers = localStorage.getItem('users')
     const users = JSON.parse(String(localUsers)) as UserInterface[]
     const user = users.find((item) => item.id === userId)
@@ -16,11 +19,14 @@ export const getProfile = (userId: string) => {
     const follows = followingUsers.filter((item) => item.following.includes(userId)).length || 0
     const following = followingUsers.find((item) => item.id === userId)?.following.length || 0
 
+    const wasFollowed = Boolean(followingUsers.find((item) => item.id === localSession.user.id)?.following.includes(userId))
+
     return {
       user,
       posts: userPosts,
       follows,
       following,
+      wasFollowed,
     } as ProfileInterface
   } catch (error) {
     printLog({
