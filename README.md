@@ -13,6 +13,10 @@ docker compose up
 
 Open [http://localhost](http://localhost) with your browser to see this project running.
 
+## Time spent (in one week)
+
+![time_spent](time_entries.png)
+
 ## Planning
 
 This section will treat about the "reply-to-post" feature.
