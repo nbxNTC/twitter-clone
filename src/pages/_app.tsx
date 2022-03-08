@@ -1,14 +1,17 @@
 import 'assets/styles/globals.css'
+import 'helpers/globalTypes'
 
 import type { AppProps } from 'next/app'
 
-import { CustomThemeProvider } from 'providers'
+import { CustomThemeProvider, CustomSessionProvider } from 'providers'
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
   return (
-    <CustomThemeProvider>
-      <Component {...pageProps} />
-    </CustomThemeProvider>
+    <CustomSessionProvider>
+      <CustomThemeProvider>
+        <Component {...pageProps} />
+      </CustomThemeProvider>
+    </CustomSessionProvider>
   )
 }
 
