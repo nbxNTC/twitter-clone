@@ -1,4 +1,4 @@
-import router from 'next/router'
+import { useRouter } from 'next/router'
 import { format } from 'date-fns'
 import { PostInterface } from 'helpers/types'
 
@@ -10,6 +10,12 @@ interface Props {
 
 export const QuotedPost = (props: Props) => {
   const { data } = props
+
+  const router = useRouter()
+
+  const handleOpenProfile = () => {
+    router.push({ pathname: '/', query: { ...router.query, profile: data.user.id } }, `/profile/${data.user.id}`, { scroll: false })
+  }
 
   const styles: MuiStyles = {
     root: {
@@ -60,13 +66,8 @@ export const QuotedPost = (props: Props) => {
       <Box sx={styles.content}>
         <Box>
           <Box sx={styles.header}>
-            <Avatar
-              sx={styles.avatar}
-              alt={`Avatar of ${data.user.nickname}`}
-              src={data.user.photoUrl}
-              onClick={() => router.push(`/profile/${data.user.nickname}`)}
-            />
-            <Link sx={styles.username} underline='hover' onClick={() => router.push(`/profile/${data.user.nickname}`)}>
+            <Avatar sx={styles.avatar} alt={`Avatar of ${data.user.nickname}`} src={data.user.photoUrl} onClick={handleOpenProfile} />
+            <Link sx={styles.username} underline='hover' onClick={handleOpenProfile}>
               {data.user.name}
             </Link>
             <Typography sx={styles.userInfo}>@{data.user.nickname}</Typography>

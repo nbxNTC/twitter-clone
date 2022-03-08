@@ -13,9 +13,11 @@ export interface LogInterface {
 }
 
 export interface UserInterface {
+  id: string
   photoUrl: string
   name: string
   nickname: string
+  createdAt: Date
 }
 
 export type PostType = 'POST' | 'REPOST' | 'QUOTE'
@@ -39,8 +41,19 @@ export interface SessionInterface {
 }
 
 export enum FeedTypeEnum {
-  'ALL' = 'ALL',
-  'FOLLOWING' = 'FOLLOWING',
+  'all' = 'all',
+  'following' = 'following',
 }
 
-export type FollowsType = string[]
+export interface FollowingUsersInterface {
+  id: string
+  following: string[]
+}
+
+export interface ProfileInterface {
+  user: UserInterface
+  posts: PostInterface[]
+  follows: number
+  following: number
+  wasFollowed: boolean
+}

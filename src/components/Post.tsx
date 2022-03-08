@@ -1,4 +1,4 @@
-import router from 'next/router'
+import { useRouter } from 'next/router'
 import { useState, useContext } from 'react'
 import { format } from 'date-fns'
 import { PostInterface, MenuItemInterface } from 'helpers/types'
@@ -17,10 +17,16 @@ interface Props {
 export const Post = (props: Props) => {
   const { data, userThatReposted } = props
 
+  const router = useRouter()
+
   const { fetchPosts } = useContext(PostsContext)
 
   const [anchorRepost, setAnchorRepost] = useState<HTMLElement | null>(null)
   const [openCreatePost, setOpenCreatePost] = useState<boolean>(false)
+
+  const handleOpenProfile = () => {
+    router.push({ pathname: '/', query: { ...router.query, profile: data.user.id } }, `/profile/${data.user.id}`, { scroll: false })
+  }
 
   const repostMenuList: MenuItemInterface[] = [
     {
@@ -101,16 +107,11 @@ export const Post = (props: Props) => {
       {userThatReposted && <Typography sx={styles.repostUser}>{userThatReposted} reposted</Typography>}
 
       <Box sx={styles.content}>
-        <Avatar
-          sx={styles.avatar}
-          alt={`Avatar of ${data.user.nickname}`}
-          src={data.user.photoUrl}
-          onClick={() => router.push(`/profile/${data.user.nickname}`)}
-        />
+        <Avatar sx={styles.avatar} alt={`Avatar of ${data.user.nickname}`} src={data.user.photoUrl} onClick={handleOpenProfile} />
 
         <Box>
           <Box sx={styles.header}>
-            <Link sx={styles.userName} underline='hover' onClick={() => router.push(`/profile/${data.user.nickname}`)}>
+            <Link sx={styles.userName} underline='hover' onClick={handleOpenProfile}>
               {data.user.name}
             </Link>
             <Typography sx={styles.userInfo}>@{data.user.nickname}</Typography>

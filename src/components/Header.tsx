@@ -1,19 +1,22 @@
-import router from 'next/router'
+import { useRouter } from 'next/router'
 import { useState, useContext } from 'react'
 import { MenuItemInterface, FeedTypeEnum } from 'helpers/types'
 import { MenuList } from 'components'
 import { PostsContext } from 'contexts'
 
 import { Box, Typography, IconButton, Tooltip } from '@mui/material'
-import { Feed } from '@mui/icons-material'
+import { Feed, ChevronLeft } from '@mui/icons-material'
 
 interface Props {
   title: string
+  hasBackButton?: boolean
   hasFeed?: boolean
 }
 
 export const Header = (props: Props) => {
-  const { title, hasFeed } = props
+  const { title, hasBackButton, hasFeed } = props
+
+  const router = useRouter()
 
   const { fetchPosts } = useContext(PostsContext)
 
@@ -32,8 +35,8 @@ export const Header = (props: Props) => {
       name: 'Following posts',
       onSubmit: () => {
         setAnchorFeed(null)
-        router.push('/', { query: { feedType: FeedTypeEnum.FOLLOWING } })
-        fetchPosts(FeedTypeEnum.FOLLOWING)
+        router.push({ pathname: '/', query: { feedType: FeedTypeEnum.following } }, '/feed/following')
+        fetchPosts(FeedTypeEnum.following)
       },
     },
   ]
@@ -48,11 +51,25 @@ export const Header = (props: Props) => {
       alignItems: 'center',
       justifyContent: 'space-between',
     },
+    titleBox: {
+      display: 'flex',
+      alignItems: 'center',
+    },
+    backButton: {
+      marginRight: '1rem',
+    },
   }
 
   return (
     <Box sx={styles.root}>
-      <Typography>{title}</Typography>
+      <Box sx={styles.titleBox}>
+        {hasBackButton && (
+          <IconButton sx={styles.backButton} onClick={() => router.back()} size='small'>
+            <ChevronLeft />
+          </IconButton>
+        )}
+        <Typography>{title}</Typography>
+      </Box>
 
       {hasFeed && (
         <Tooltip title='Feed type'>

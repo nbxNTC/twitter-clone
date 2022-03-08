@@ -3,9 +3,9 @@ import { LogInterface, SessionInterface } from 'helpers/types'
 export const printLog = async ({ type, componentName, functionName, message, stackTrace }: LogInterface) => {
   const currentDate = new Date().toISOString()
 
-  const formattedStackTrace = stackTrace ? JSON.stringify(stackTrace) : 'Não informado'
+  const formattedStackTrace = stackTrace ? JSON.stringify(stackTrace) : 'Not found'
 
-  const content = `[strider-front-assessment] [Tipo: ${type}] [Componente: ${componentName}] [Função: ${functionName}] [Data: ${currentDate}] [Mensagem: ${message}] [Erro: ${formattedStackTrace}]`
+  const content = `[strider-front-assessment] [Type: ${type}] [Component: ${componentName}] [Function: ${functionName}] [Date: ${currentDate}] [Message: ${message}] [Error: ${formattedStackTrace}]`
 
   return console[type](content)
 }

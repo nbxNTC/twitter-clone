@@ -1,16 +1,23 @@
 import router from 'next/router'
-import { useState } from 'react'
+import { useState, useContext } from 'react'
+import { SessionContext } from 'contexts'
 
 import { Box, Button } from '@mui/material'
 import { Home, PersonOutline } from '@mui/icons-material'
 import { CreatePostDialog } from 'components'
 
 export const Sidebar = () => {
+  const { session } = useContext(SessionContext)
+
   const [openCreatePost, setOpenCreatePost] = useState<boolean>(false)
 
   const menuItems = [
-    { name: 'Home', url: '/', icon: <Home /> },
-    { name: 'Profile', url: '/profile', icon: <PersonOutline /> },
+    { name: 'Home', action: () => router.push('/'), icon: <Home /> },
+    {
+      name: 'Profile',
+      action: () => router.push({ pathname: '/', query: { profile: session?.user.id } }, `/profile/${session?.user.id}`, { scroll: false }),
+      icon: <PersonOutline />,
+    },
   ]
 
   const styles: MuiStyles = {
@@ -41,7 +48,7 @@ export const Sidebar = () => {
       </Button>
 
       {menuItems.map((item, index) => (
-        <Button startIcon={item.icon} size='large' onClick={() => router.push(item.url)} key={new Date().toString() + index}>
+        <Button startIcon={item.icon} size='large' onClick={item.action} key={new Date().toString() + index}>
           {item.name}
         </Button>
       ))}
