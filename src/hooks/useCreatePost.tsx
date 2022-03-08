@@ -9,6 +9,7 @@ export const useCreatePost = (handleClose?: () => void, post?: PostInterface) =>
   const { fetchPosts } = useContext(PostsContext)
 
   const [message, setMessage] = useState<string>('')
+  const [error, setError] = useState<string | undefined>()
   const leftCharacters = LIMIT_CHAR - message.length
 
   const handleChange = ({ target }: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
@@ -17,13 +18,15 @@ export const useCreatePost = (handleClose?: () => void, post?: PostInterface) =>
     setMessage(target.value)
   }
 
-  const handleSubmit = () => {
-    createPost(message, post)
+  const handleSubmit = async () => {
+    const res = await createPost(message, post)
+    if (res) return setError(res)
+
     fetchPosts()
     setMessage('')
 
     if (handleClose) handleClose()
   }
 
-  return { message, handleChange, handleSubmit, leftCharacters }
+  return { message, error, handleChange, handleSubmit, leftCharacters }
 }

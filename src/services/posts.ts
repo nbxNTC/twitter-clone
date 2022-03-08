@@ -1,3 +1,4 @@
+import { isSameDay } from 'date-fns'
 import { LogTypeEnum, PostInterface, FeedTypeEnum, FollowingUsersInterface } from 'helpers/types'
 import { printLog, getSession } from 'helpers/utils'
 
@@ -27,7 +28,7 @@ export const getPosts = (userId?: string, feedType?: FeedTypeEnum) => {
   }
 }
 
-export const createPost = (message: string, post?: PostInterface) => {
+export const createPost = async (message: string, post?: PostInterface) => {
   try {
     const session = getSession()
 
@@ -39,6 +40,20 @@ export const createPost = (message: string, post?: PostInterface) => {
         message: 'Session not found',
       })
 
+    const localPosts = await localStorage.getItem('posts')
+    const posts: PostInterface[] = localPosts ? JSON.parse(localPosts) : []
+
+    if (posts.filter((item) => item.user.id === session.user.id && isSameDay(new Date(), new Date(item.createdAt))).length >= 5) {
+      const errorMessage = 'Max of daily posts limit reached'
+      printLog({
+        type: LogTypeEnum.error,
+        componentName: 'services/posts',
+        functionName: 'createPost',
+        message: errorMessage,
+      })
+      return errorMessage
+    }
+
     const newPost: PostInterface = {
       message,
       user: session.user,
@@ -47,12 +62,9 @@ export const createPost = (message: string, post?: PostInterface) => {
       createdAt: new Date(),
     }
 
-    const localPosts = localStorage.getItem('posts')
-    const posts: PostInterface[] = localPosts ? JSON.parse(localPosts) : []
-
     posts.push(newPost)
 
-    localStorage.setItem('posts', JSON.stringify(posts))
+    await localStorage.setItem('posts', JSON.stringify(posts))
   } catch (error) {
     printLog({
       type: LogTypeEnum.error,

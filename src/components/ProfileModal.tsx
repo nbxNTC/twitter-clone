@@ -114,6 +114,11 @@ export const ProfileModal = () => {
             <Typography sx={styles.metricsValue}>{profile.follows}</Typography>
             <Typography sx={styles.metricsTitle}>Followers</Typography>
           </Box>
+
+          <Box sx={styles.flex}>
+            <Typography sx={styles.metricsValue}>{profile.posts.length}</Typography>
+            <Typography sx={styles.metricsTitle}>Posts</Typography>
+          </Box>
         </Box>
 
         <Typography sx={styles.feedTitle} variant='h6' component='h6'>

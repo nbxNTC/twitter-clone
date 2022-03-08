@@ -3,7 +3,19 @@ import { PostInterface } from 'helpers/types'
 import { SessionContext } from 'contexts'
 import { useCreatePost } from 'hooks'
 
-import { Dialog, DialogTitle, DialogContent, Avatar, Divider, Button, InputBase, IconButton, Box, Typography } from '@mui/material'
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  Avatar,
+  Divider,
+  Button,
+  InputBase,
+  IconButton,
+  Box,
+  Typography,
+  FormHelperText,
+} from '@mui/material'
 import { Close } from '@mui/icons-material'
 import { QuotedPost } from 'components'
 
@@ -22,7 +34,7 @@ export const CreatePostDialog = (props: Props) => {
     setOpen(false)
   }
 
-  const { message, handleChange, handleSubmit, leftCharacters } = useCreatePost(handleClose, post)
+  const { message, error, handleChange, handleSubmit, leftCharacters } = useCreatePost(handleClose, post)
 
   const styles: MuiStyles = {
     content: {
@@ -38,6 +50,9 @@ export const CreatePostDialog = (props: Props) => {
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'flex-end',
+    },
+    helperText: {
+      color: 'red',
     },
     actions: {
       display: 'flex',
@@ -69,6 +84,8 @@ export const CreatePostDialog = (props: Props) => {
             onChange={handleChange}
             autoFocus
           />
+
+          <FormHelperText sx={styles.helperText}>{error}</FormHelperText>
 
           {post && <QuotedPost data={post} />}
 
